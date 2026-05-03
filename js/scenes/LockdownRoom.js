@@ -11,6 +11,8 @@ export default class LockdownRoom extends BaseScene {
 
         this.createCommon(0x552222);
 
+        this.medkitTaken = false;
+
         // -------------------------
         // SI YA FUE SUPERADA
         // -------------------------
@@ -52,8 +54,10 @@ export default class LockdownRoom extends BaseScene {
             () => {
 
                 if (!this.locked) {
+
                     GameState.nextSpawnX = 400;
                     GameState.nextSpawnY = 80;
+
                     this.scene.start("Hub");
                 }
 
@@ -91,6 +95,40 @@ export default class LockdownRoom extends BaseScene {
         if (this.timerEvent) {
             this.timerEvent.remove(false);
         }
+
+        this.spawnMedkit();
+    }
+
+    spawnMedkit() {
+
+        if (this.medkitTaken) return;
+
+        this.medkit = this.add.rectangle(
+            400,
+            260,
+            26,
+            26,
+            0x00ff88
+        );
+
+        this.physics.add.existing(this.medkit, true);
+
+        this.physics.add.overlap(
+            this.player.sprite,
+            this.medkit,
+            () => {
+
+                GameState.hp += 40;
+
+                if (GameState.hp > GameState.maxHp) {
+                    GameState.hp = GameState.maxHp;
+                }
+
+                this.medkitTaken = true;
+                this.medkit.destroy();
+
+            }
+        );
     }
 
     update() {
@@ -102,7 +140,11 @@ export default class LockdownRoom extends BaseScene {
 
         if (this.locked) {
             extra = "\nSobrevive: " + this.timeLeft;
-        } else {
+        }
+        else if (!this.medkitTaken) {
+            extra = "\nBotiquin disponible";
+        }
+        else {
             extra = "\nPuerta abierta!";
         }
 
