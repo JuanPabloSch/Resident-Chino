@@ -39,9 +39,10 @@ export default class BaseScene extends Phaser.Scene {
             this.zombies,
             (bullet, zombie) => {
 
+                if (zombie.isBoss) return;
+
                 bullet.destroy();
                 zombie.destroy();
-
             }
         );
 

@@ -20,6 +20,8 @@ export default class PlayerSystem {
 
         this.keys = scene.input.keyboard.createCursorKeys();
 
+        scene.input.keyboard.resetKeys();
+
         this.reloading = false;
         this.canTakeDamage = true;
 
