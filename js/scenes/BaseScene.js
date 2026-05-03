@@ -104,12 +104,41 @@ export default class BaseScene extends Phaser.Scene {
 
     updateUI(title) {
 
-        this.ui.setText(
-            title + "\n" +
-            "HP: " + GameState.hp + "/" + GameState.maxHp + "\n" +
-            "Balas: " + GameState.magazine + "/" + GameState.maxMagazine + "\n" +
-            "Llave: " + (GameState.hasKey ? "SI" : "NO")
-        );
+    let ammoText = "";
+    let weaponText = "";
+
+    if (GameState.weapon === "pistol") {
+
+        weaponText = "Pistola";
+
+        ammoText =
+            "Balas: " +
+            GameState.magazine +
+            "/" +
+            GameState.maxMagazine;
     }
+    else {
+
+        weaponText = "Shotgun";
+
+        ammoText =
+            "Shells: " +
+            GameState.shotgunAmmo +
+            "/" +
+            GameState.shotgunMaxAmmo;
+    }
+
+    this.ui.setText(
+        title + "\n" +
+        "HP: " +
+        GameState.hp +
+        "/" +
+        GameState.maxHp + "\n" +
+        ammoText + "\n" +
+        "Arma: " + weaponText + "\n" +
+        "Llave: " +
+        (GameState.hasFinalKey ? "SI" : "NO")
+    );
+}
 
 }

@@ -127,19 +127,23 @@ export default class ButtonRoom extends BaseScene {
 
     unlockDoor() {
 
-        this.locked = false;
-        GameState.buttonSolved = true;
+    this.locked = false;
+    GameState.buttonSolved = true;
 
-        this.door.fillColor = 0x00ff00;
+    // REWARD
+    GameState.hasShotgun = true;
+    GameState.shotgunAmmo = 6;
 
-        if (this.button) {
-            this.button.destroy();
-        }
+    this.door.fillColor = 0x00ff00;
 
-        if (this.timerEvent) {
-            this.timerEvent.remove(false);
-        }
+    if (this.button) {
+        this.button.destroy();
     }
+
+    if (this.timerEvent) {
+        this.timerEvent.remove(false);
+    }
+}
 
     update() {
 
