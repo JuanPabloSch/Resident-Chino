@@ -1,5 +1,8 @@
 import PlayerSystem from "../systems/PlayerSystem.js";
 import { GameState } from "../state/GameState.js";
+import Zombie from "../enemies/Zombie.js";
+import FastZombie from "../enemies/FastZombie.js";
+import TankZombie from "../enemies/TankZombie.js";
 
 export default class BaseScene extends Phaser.Scene {
 
@@ -69,38 +72,34 @@ export default class BaseScene extends Phaser.Scene {
         );
     }
 
-    spawnZombie(speed) {
+spawnZombie() {
 
-        const x = Phaser.Math.Between(40, 760);
-        const y = Phaser.Math.Between(40, 560);
+    const x = Phaser.Math.Between(40, 760);
+    const y = Phaser.Math.Between(40, 560);
 
-        const zombie = this.add.rectangle(
-            x,
-            y,
-            30,
-            30,
-            0xff0000
-        );
+    const r = Math.random();
 
-        this.physics.add.existing(zombie);
-
-        zombie.speed = speed;
-
-        this.zombies.add(zombie);
+    if (r < 0.6) {
+        new Zombie(this, x, y);
     }
+    else if (r < 0.9) {
+        new FastZombie(this, x, y);
+    }
+    else {
+        new TankZombie(this, x, y);
+    }
+}
 
     updateZombies() {
 
-        this.zombies.getChildren().forEach((zombie) => {
+    this.zombies.getChildren().forEach(z => {
 
-            this.physics.moveToObject(
-                zombie,
-                this.player.sprite,
-                zombie.speed
-            );
+        if (z.enemy) {
+            z.enemy.update(this.player.sprite);
+        }
 
-        });
-    }
+    });
+}
 
     updateUI(title) {
 
