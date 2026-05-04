@@ -9,7 +9,13 @@ export default class ButtonRoom extends BaseScene {
 
     create() {
 
-        this.createCommon(0x224455);
+         // 1. fondo primero
+        this.add.image(400, 300, "bg_button")
+            .setScale(0.7)
+            .setDepth(-1000);
+
+        // 2. mundo / player / UI
+        this.createCommon(0x222244);
 
         // -------------------------
         // ESTADO GLOBAL

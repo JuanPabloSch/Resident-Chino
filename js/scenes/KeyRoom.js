@@ -9,7 +9,13 @@ export default class KeyRoom extends BaseScene {
 
     create() {
 
-        this.createCommon(0x555522);
+        // 1. fondo primero
+        this.add.image(400, 300, "bg_key")
+            .setScale(0.7)
+            .setDepth(-1000);
+
+        // 2. mundo / player / UI
+        this.createCommon(0x223322);
 
         this.bossAlive = !GameState.hasFinalKey;
         this.keySpawned = false;

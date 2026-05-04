@@ -9,6 +9,10 @@ export default class LockdownRoom extends BaseScene {
 
     create() {
 
+        this.add.image(400, 300, "bg_lockdown")
+        .setScale(0.56)
+        .setDepth(-1000);
+
         this.createCommon(0x552222);
 
         this.medkitTaken = false;

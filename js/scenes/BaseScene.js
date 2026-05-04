@@ -19,7 +19,7 @@ export default class BaseScene extends Phaser.Scene {
     800,
     600,
     backgroundColor,
-    0.3
+    0.1
 );
 
         // Mundo

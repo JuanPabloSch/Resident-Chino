@@ -10,7 +10,7 @@ export default class Hub extends BaseScene {
     create() {
 
         // 1. fondo PRIMERO
-    this.add.image(400, 300, "bg_hub").setDepth(-1000);
+    this.add.image(400, 300, "bg_hub").setDepth(-1000).setScale(0.56);;
 
     // 2. mundo encima
     this.createCommon(0x2a2a2a);
