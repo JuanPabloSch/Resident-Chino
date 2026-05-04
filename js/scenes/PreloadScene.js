@@ -22,7 +22,12 @@ export default class PreloadScene extends Phaser.Scene {
             frameWidth: 168,
             frameHeight: 253
         });
-        }
+        //Zombie faste
+        this.load.spritesheet('zombie_fast', 'assets/zombie_fast.png', {
+    frameWidth: 160,
+    frameHeight: 256
+});
+    }
 
     create() {
         this.scene.start("Hub");
