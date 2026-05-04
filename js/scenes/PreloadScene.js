@@ -12,7 +12,12 @@ export default class PreloadScene extends Phaser.Scene {
         this.load.image("bg_lockdown", "./assets/bg_lockdown.png");
         this.load.image("bg_button", "./assets/bg_button.png");
         this.load.image("bg_key", "./assets/bg_key.png");
-    }
+        // 👇 ACA VA EL ZOMBIE
+        this.load.spritesheet("zombie", "./assets/zombie.png", {
+            frameWidth: 168,
+            frameHeight: 253
+        });
+        }
 
     create() {
         this.scene.start("Hub");

@@ -2,37 +2,60 @@ import { GameState } from "../state/GameState.js";
 
 export default class Enemy {
 
-    constructor(scene, x, y, color, speed, hp = 1) {
+    constructor(scene, x, y, texture, speed, hp = 1) {
 
-        this.scene = scene;
+    this.scene = scene;
 
-        this.sprite = scene.add.rectangle(
-            x,
-            y,
-            30,
-            30,
-            color
-        );
+    // 👇 si recibe textura → usa sprite
+    if (typeof texture === "string") {
 
+        this.sprite = scene.physics.add.sprite(x, y, texture, 0);
+        this.sprite.setScale(0.35);
+
+    } else {
+        // fallback viejo (para otros enemigos)
+        this.sprite = scene.add.rectangle(x, y, 30, 30, texture);
         scene.physics.add.existing(this.sprite);
-
-        this.sprite.enemy = this;
-        this.sprite.isBoss = false;
-
-        this.speed = speed;
-        this.hp = hp;
-
-        scene.zombies.add(this.sprite);
     }
+
+    this.sprite.enemy = this;
+    this.sprite.isBoss = false;
+
+    this.speed = speed;
+    this.hp = hp;
+
+    scene.zombies.add(this.sprite);
+}
 
     update(player) {
 
-        this.scene.physics.moveToObject(
-            this.sprite,
-            player,
-            this.speed
-        );
+    const dx = player.x - this.sprite.x;
+    const dy = player.y - this.sprite.y;
+
+    this.scene.physics.moveToObject(
+        this.sprite,
+        player,
+        this.speed
+    );
+
+    // 👇 SOLO si es sprite (no rectángulo)
+    if (this.sprite.setFrame) {
+
+        if (Math.abs(dx) > Math.abs(dy)) {
+
+            // izquierda / derecha
+            this.sprite.setFrame(dx > 0 ? 3 : 2);
+
+        } else {
+
+            // arriba / abajo
+            this.sprite.setFrame(dy > 0 ? 0 : 1);
+        }
     }
+    // 👇 ACÁ VA LA VIBRACIÓN
+    this.sprite.x += Phaser.Math.Between(-1, 1);
+    this.sprite.y += Phaser.Math.Between(-1, 1);
+}
 
     damage(amount = 1) {
 
