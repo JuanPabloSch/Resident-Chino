@@ -52,7 +52,7 @@ update() {
     if (this.cursors.up.isDown) vy = -1;
     if (this.cursors.down.isDown) vy = 1;
 
-    const speed = 200;
+    const speed = 120;
 
     this.sprite.setVelocity(vx * speed, vy * speed);
 
@@ -81,19 +81,33 @@ update() {
     // 👇 profundidad (muy importante para que se vea bien)
     this.sprite.setDepth(this.sprite.y);
 }
-        move() {
+move() {
 
-        const speed = 180;
-        const body = this.sprite.body;
+    const speed = 180;
+    const body = this.sprite.body;
 
-        body.setVelocity(0);
+    let vx = 0;
+    let vy = 0;
 
-        if (this.keys.left.isDown) body.setVelocityX(-speed);
-        else if (this.keys.right.isDown) body.setVelocityX(speed);
+    body.setVelocity(0);
 
-        if (this.keys.up.isDown) body.setVelocityY(-speed);
-        else if (this.keys.down.isDown) body.setVelocityY(speed);
+    if (this.keys.left.isDown) vx = -1;
+    else if (this.keys.right.isDown) vx = 1;
+
+    if (this.keys.up.isDown) vy = -1;
+    else if (this.keys.down.isDown) vy = 1;
+
+    body.setVelocity(vx * speed, vy * speed);
+
+    // 👇 detectar movimiento
+    const moving = vx !== 0 || vy !== 0;
+
+    // 👇 vibración
+    if (moving) {
+        this.sprite.x += Phaser.Math.Between(-0.5, 0.5);
+        this.sprite.y += Phaser.Math.Between(-0.5, 0.5);
     }
+}
 
     weaponSwitch() {
 

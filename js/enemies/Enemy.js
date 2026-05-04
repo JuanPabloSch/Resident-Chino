@@ -10,7 +10,7 @@ export default class Enemy {
     if (typeof texture === "string") {
 
         this.sprite = scene.physics.add.sprite(x, y, texture, 0);
-        this.sprite.setScale(0.35);
+        this.sprite.setScale(0.28);
 
     } else {
         // fallback viejo (para otros enemigos)
