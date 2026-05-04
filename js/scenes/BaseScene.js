@@ -37,15 +37,21 @@ export default class BaseScene extends Phaser.Scene {
         GameState.nextSpawnY = null;
 
         // Bullet vs Zombie
+        // Bullet vs Zombie
         this.physics.add.overlap(
             this.bullets,
             this.zombies,
             (bullet, zombie) => {
 
+                bullet.destroy();
+
                 if (zombie.isBoss) return;
 
-                bullet.destroy();
-                zombie.destroy();
+                if (zombie.enemy) {
+                    zombie.enemy.damage(1);
+                } else {
+                    zombie.destroy(); // fallback por seguridad
+                }
             }
         );
 
