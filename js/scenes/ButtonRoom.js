@@ -11,7 +11,7 @@ export default class ButtonRoom extends BaseScene {
 
          // 1. fondo primero
         this.add.image(400, 300, "bg_button")
-            .setScale(0.7)
+            .setScale(0.56)
             .setDepth(-1000);
 
         // 2. mundo / player / UI
