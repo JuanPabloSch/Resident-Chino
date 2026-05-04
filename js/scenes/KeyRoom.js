@@ -11,7 +11,7 @@ export default class KeyRoom extends BaseScene {
 
         // 1. fondo primero
         this.add.image(400, 300, "bg_key")
-            .setScale(0.7)
+            .setScale(0.56)
             .setDepth(-1000);
 
         // 2. mundo / player / UI
@@ -76,28 +76,16 @@ spawnBoss() {
 
     makeExit() {
 
-        const door = this.add.rectangle(
-            40,
-            300,
-            40,
-            80,
-            0xffffff
-        );
+    this.exitDoor = this.add.rectangle(
+        40,
+        300,
+        40,
+        80,
+        0xff0000
+    );
 
-        this.physics.add.existing(door, true);
-
-        this.physics.add.overlap(
-            this.player.sprite,
-            door,
-            () => {
-
-                GameState.nextSpawnX = 720;
-                GameState.nextSpawnY = 300;
-
-                this.scene.start("Hub");
-            }
-        );
-    }
+    this.physics.add.existing(this.exitDoor, true);
+}
 
     updateZombies() {
 
@@ -120,6 +108,26 @@ spawnBoss() {
     this.player.update();
     this.updateZombies();
 
+    // 👇 chequeo manual puerta
+    if (
+        this.exitDoor &&
+        this.player.sprite &&
+        Phaser.Geom.Intersects.RectangleToRectangle(
+            this.player.sprite.getBounds(),
+            this.exitDoor.getBounds()
+        )
+    ) {
+
+        // solo salir si boss está muerto
+        if (!this.boss || !this.boss.active) {
+
+            GameState.nextSpawnX = 720;
+            GameState.nextSpawnY = 300;
+
+            this.scene.start("Hub");
+        }
+    }
+
     let extra = "";
 
     if (!GameState.hasFinalKey) {
@@ -131,6 +139,7 @@ spawnBoss() {
     this.updateUI("KEY ROOM");
     this.ui.setText(this.ui.text + extra);
 }
+
     killBoss() {
 
         this.bossAlive = false;
