@@ -3,6 +3,7 @@ import { GameState } from "../state/GameState.js";
 import Zombie from "../enemies/Zombie.js";
 import FastZombie from "../enemies/FastZombie.js";
 import TankZombie from "../enemies/TankZombie.js";
+import BossZombie from "../enemies/BossZombie.js";
 
 export default class BaseScene extends Phaser.Scene {
 
@@ -37,24 +38,34 @@ export default class BaseScene extends Phaser.Scene {
         GameState.nextSpawnX = null;
         GameState.nextSpawnY = null;
 
-        // Bullet vs Zombie
-        // Bullet vs Zombie
-        this.physics.add.overlap(
-            this.bullets,
-            this.zombies,
-            (bullet, zombie) => {
+// Bullet vs Zombie
+this.physics.add.overlap(
+    this.bullets,
+    this.zombies,
+    (bullet, zombie) => {
 
-                bullet.destroy();
+        if (!zombie || !zombie.enemy) return;
 
-                if (zombie.isBoss) return;
+        let damage = 1;
 
-                if (zombie.enemy) {
-                    zombie.enemy.damage(1);
-                } else {
-                    zombie.destroy(); // fallback por seguridad
-                }
-            }
-        );
+        // shotgun
+        if (bullet && bullet.isShotgun === true) {
+            damage = 3;
+        }
+
+        // boss más resistente
+        if (zombie.isBoss === true) {
+            damage *= 0.3;
+        }
+
+        zombie.enemy.damage(damage);
+
+        // destruir bala al final (más seguro)
+        if (bullet && bullet.destroy) {
+            bullet.destroy();
+        }
+    }
+);
 
         // Player vs Zombie
         this.physics.add.overlap(
@@ -95,6 +106,14 @@ spawnZombie() {
     else {
         new TankZombie(this, x, y);
     }
+}
+
+spawnBoss() {
+
+    const x = Phaser.Math.Between(100, 700);
+    const y = Phaser.Math.Between(100, 500);
+
+    new BossZombie(this, x, y);
 }
 
     updateZombies() {

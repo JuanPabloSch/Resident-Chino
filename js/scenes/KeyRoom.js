@@ -35,24 +35,44 @@ export default class KeyRoom extends BaseScene {
         this.makeExit();
     }
 
-    spawnBoss() {
+spawnBoss() {
 
-        this.bossHp = 12;
+    const boss = this.add.rectangle(400, 220, 60, 60, 0xaa0000);
 
-        this.boss = this.add.rectangle(
-            400,
-            220,
-            60,
-            60,
-            0xaa0000
-        );
+    this.physics.add.existing(boss);
+    this.zombies.add(boss);
 
-        this.physics.add.existing(this.boss);
-        this.zombies.add(this.boss);
+    boss.speed = 45;
+    boss.isBoss = true;
 
-        this.boss.speed = 45;
-        this.boss.isBoss = true;
-    }
+    // 🔥 asegurar colisiones correctas
+    boss.body.setCollideWorldBounds(true);
+    boss.body.setSize(60, 60);
+    boss.body.setOffset(0, 0);
+
+    // 👇 conexión con sistema global de daño
+    boss.enemy = {
+        hp: 5,
+
+        damage: (amount) => {
+
+            boss.enemy.hp -= amount;
+
+            // DEBUG (opcional, podés borrar después)
+            console.log("HP BOSS:", boss.enemy.hp);
+
+            if (boss.enemy.hp <= 0) {
+                this.killBoss();
+            }
+        },
+
+        update: (player) => {
+            this.physics.moveToObject(boss, player, boss.speed);
+        }
+    };
+
+    this.boss = boss;
+}
 
     makeExit() {
 
@@ -95,44 +115,22 @@ export default class KeyRoom extends BaseScene {
 
     }
 
-    update() {
+   update() {
 
-        this.player.update();
-        this.updateZombies();
+    this.player.update();
+    this.updateZombies();
 
-        // daño boss personalizado
-        this.bullets.getChildren().forEach(bullet => {
+    let extra = "";
 
-            if (this.bossAlive && this.boss && bullet.active) {
-
-                if (Phaser.Geom.Intersects.RectangleToRectangle(
-                    bullet.getBounds(),
-                    this.boss.getBounds()
-                )) {
-
-                    bullet.destroy();
-
-                    this.bossHp--;
-
-                    if (this.bossHp <= 0) {
-                        this.killBoss();
-                    }
-                }
-            }
-        });
-
-        let extra = "";
-
-        if (!GameState.hasFinalKey) {
-            extra = "\nBusca la llave final";
-        } else {
-            extra = "\nLlave conseguida!";
-        }
-
-        this.updateUI("KEY ROOM");
-        this.ui.setText(this.ui.text + extra);
+    if (!GameState.hasFinalKey) {
+        extra = "\nBusca la llave final";
+    } else {
+        extra = "\nLlave conseguida!";
     }
 
+    this.updateUI("KEY ROOM");
+    this.ui.setText(this.ui.text + extra);
+}
     killBoss() {
 
         this.bossAlive = false;
