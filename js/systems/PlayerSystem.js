@@ -6,12 +6,15 @@ export default class PlayerSystem {
 
         this.scene = scene;
 
-        this.sprite = scene.add.rectangle(
-            x, y, 30, 30, 0x00ff00
-        );
+        this.sprite = scene.physics.add.sprite(x, y, "player", 0);
+
+        this.sprite.setScale(0.3);
+        this.sprite.setCollideWorldBounds(true);
 
         scene.physics.add.existing(this.sprite);
         this.sprite.body.setCollideWorldBounds(true);
+
+        this.cursors = scene.input.keyboard.createCursorKeys();
 
         this.keys = scene.input.keyboard.createCursorKeys();
         this.qKey = scene.input.keyboard.addKey(
@@ -38,13 +41,47 @@ export default class PlayerSystem {
         });
     }
 
-    update() {
 
-        this.move();
-        this.weaponSwitch();
+update() {
+
+    let vx = 0;
+    let vy = 0;
+
+    if (this.cursors.left.isDown) vx = -1;
+    if (this.cursors.right.isDown) vx = 1;
+    if (this.cursors.up.isDown) vy = -1;
+    if (this.cursors.down.isDown) vy = 1;
+
+    const speed = 200;
+
+    this.sprite.setVelocity(vx * speed, vy * speed);
+
+    // 👇 dirección visual del sprite
+    if (this.sprite.setFrame) {
+
+        if (Math.abs(vx) > Math.abs(vy)) {
+
+            if (vx > 0) {
+                this.sprite.setFrame(3); // right
+            } else if (vx < 0) {
+                this.sprite.setFrame(2); // left
+            }
+
+        } else {
+
+            if (vy > 0) {
+                this.sprite.setFrame(0); // front
+            } else if (vy < 0) {
+                this.sprite.setFrame(1); // back
+            }
+        }
+        this.sprite.setDepth(this.sprite.y);
     }
 
-    move() {
+    // 👇 profundidad (muy importante para que se vea bien)
+    this.sprite.setDepth(this.sprite.y);
+}
+        move() {
 
         const speed = 180;
         const body = this.sprite.body;
