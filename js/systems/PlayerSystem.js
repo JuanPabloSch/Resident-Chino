@@ -5,7 +5,9 @@ export default class PlayerSystem {
     constructor(scene, x, y) {
 
         this.scene = scene;
-
+        this.walkTimer = 0;
+        this.walkOffset = 0;
+        this.isMoving = false;
         this.sprite = scene.physics.add.sprite(x, y, "player", 0);
 
         this.sprite.setScale(0.3);
@@ -56,31 +58,31 @@ update() {
 
     this.sprite.setVelocity(vx * speed, vy * speed);
 
-    // 👇 dirección visual del sprite
-    if (this.sprite.setFrame) {
+    this.isMoving = vx !== 0 || vy !== 0;
 
-        if (Math.abs(vx) > Math.abs(vy)) {
-
-            if (vx > 0) {
-                this.sprite.setFrame(3); // right
-            } else if (vx < 0) {
-                this.sprite.setFrame(2); // left
-            }
-
-        } else {
-
-            if (vy > 0) {
-                this.sprite.setFrame(0); // front
-            } else if (vy < 0) {
-                this.sprite.setFrame(1); // back
-            }
-        }
-        this.sprite.setDepth(this.sprite.y);
+    // 🎯 animación de dirección
+    if (Math.abs(vx) > Math.abs(vy)) {
+        this.sprite.setFrame(vx > 0 ? 3 : 2);
+    } else {
+        this.sprite.setFrame(vy > 0 ? 0 : 1);
     }
 
-    // 👇 profundidad (muy importante para que se vea bien)
+    // 👇 vibración controlada
+    if (this.isMoving) {
+        this.walkTimer += 0.1;
+
+        this.walkOffset = Math.sin(this.walkTimer) * 0.3;
+
+        this.sprite.y += this.walkOffset;
+    } else {
+        // volver suave al centro
+        this.sprite.y -= this.walkOffset * 0.2;
+        this.walkOffset *= 0.8;
+    }
+
     this.sprite.setDepth(this.sprite.y);
 }
+
 move() {
 
     const speed = 180;
