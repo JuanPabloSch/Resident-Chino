@@ -14,12 +14,13 @@ export default class BaseScene extends Phaser.Scene {
 
         // Fondo
         this.add.rectangle(
-            400,
-            300,
-            800,
-            600,
-            backgroundColor
-        );
+    400,
+    300,
+    800,
+    600,
+    backgroundColor,
+    0.3
+);
 
         // Mundo
         this.physics.world.setBounds(0, 0, 800, 600);

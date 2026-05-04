@@ -9,7 +9,11 @@ export default class Hub extends BaseScene {
 
     create() {
 
-        this.createCommon(0x2a2a2a);
+        // 1. fondo PRIMERO
+    this.add.image(400, 300, "bg_hub").setDepth(-1000);
+
+    // 2. mundo encima
+    this.createCommon(0x2a2a2a);
 
         // zombies leves
         this.time.addEvent({
